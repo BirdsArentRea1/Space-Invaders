@@ -9,12 +9,14 @@ clock = pygame.time.Clock()
 gameover = False
 
 my_font = pygame.font.SysFont('New Times Roman MS', 30)
-text_surface = my_font.render('LIVES:', False, (255, 0, 0))
+text_surface = my_font.render('LIVES:', False, (250, 250, 20))
+text_surface2 = my_font.render('SCORE:', False, (250, 250, 20))
 
 AlienDeath = pygame.mixer.Sound('LegoYodaDeath.mp3')
 TankFire = pygame.mixer.Sound('VineBoom.mp3')
 
 lives = 3
+score = 0
 xpos = 400
 ypos = 750
 moveleft = False
@@ -30,7 +32,7 @@ class Alien:
         self.isAlive = True
         self.direction = 1
     def move(self, time):
-        if time % 800 == 0:
+        if time % 300 == 0:
             self.ypos += 100
             self.direction *=-1
             return 0
@@ -88,11 +90,11 @@ class wall:
                 if Bulletx < self.xpos + 40:
                     if Bullety < self.ypos + 40:
                         if Bullety > self.ypos:
-                            print("hit")
                             self.numHits += 1
                             return False
                         
         return True
+    
     def draw(self):
         if self.numHits == 0:
             pygame.draw.rect(screen, (250, 250, 20), (self.xpos, self.ypos, 30, 30))
@@ -195,7 +197,9 @@ while not gameover: #GameLoop###################################################
         if bullet.isAlive == True:
             for i in range (len(armada)):
                 bullet.isAlive = armada[i].collide(bullet.xpos, bullet.ypos)
-                if bullet.isAlive == False:
+                if bullet.isAlive == False:           
+                    score += 100                                                                                                      
+                    print(score)
                     break
                 
         if bullet.isAlive == True:
@@ -235,13 +239,14 @@ while not gameover: #GameLoop###################################################
                     if missiles[i].xpos < xpos + 40:
                         if missiles[i].ypos < ypos + 40:
                             if missiles[i].ypos > ypos:
-                                lives -= 1
                                 time.sleep(1)
                                 xpos = 400
                                 ypos = 750
+                                lives -= 1
                                 
-        if lives == 0:
-            gameover = True
+    if lives <= 0:
+        gameover = True
+        print("GAME OVER!")
                                 
                                 
 #RENDER----------------------------------------------------------------------------------------
@@ -249,6 +254,7 @@ while not gameover: #GameLoop###################################################
     screen.fill((0, 0, 0))
     
     screen.blit(text_surface, (0,0))
+    screen.blit(text_surface2, (0,30))
     
     #player
     pygame.draw.rect(screen, (150, 200, 70), (xpos, 750, 60, 20)) 
@@ -257,14 +263,14 @@ while not gameover: #GameLoop###################################################
     
     #lives
     if lives == 3:
-        pygame.draw.rect(screen, (150, 200, 70), (80, 10, 40, 10)) 
-        pygame.draw.rect(screen, (150, 200, 70), (130, 10, 40, 10)) 
-        pygame.draw.rect(screen, (150, 200, 70), (180, 10, 40, 10))
+        pygame.draw.rect(screen, (150, 200, 70), (80, 5, 40, 10)) 
+        pygame.draw.rect(screen, (150, 200, 70), (130, 5, 40, 10)) 
+        pygame.draw.rect(screen, (150, 200, 70), (180, 5, 40, 10))
     elif lives == 2:
-        pygame.draw.rect(screen, (150, 200, 70), (80, 10, 40, 10)) 
-        pygame.draw.rect(screen, (150, 200, 70), (130, 10, 40, 10))
+        pygame.draw.rect(screen, (150, 200, 70), (80, 5, 40, 10)) 
+        pygame.draw.rect(screen, (150, 200, 70), (130, 5, 40, 10))
     elif lives == 1:
-        pygame.draw.rect(screen, (150, 200, 70), (80, 10, 40, 10)) 
+        pygame.draw.rect(screen, (150, 200, 70), (80, 5, 40, 10)) 
     
     
     #aliens
